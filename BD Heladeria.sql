@@ -1,3 +1,9 @@
+drop database if exists Heladeria;
+
+create database Heladeria;
+
+use Heladeria;
+
 CREATE TABLE Cliente (
     ClienteID INT AUTO_INCREMENT PRIMARY KEY,
     Nombre VARCHAR(100) NOT NULL
