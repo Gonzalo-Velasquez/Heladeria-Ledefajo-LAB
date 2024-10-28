@@ -1,114 +1,104 @@
-drop database if exists Heladeria;
-create database Heladeria;
-use Heladeria;
-
-create table Cliente(
-ClienteID int primary key auto_increment,
-Nombre varchar(50)
+CREATE TABLE Cliente (
+    ClienteID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(100) NOT NULL
 );
 
-create table Inventario(
-InventarioID int primary key auto_increment,
-Productos varchar(50),
-Cantidad int,
-Precio_Unidad decimal
+CREATE TABLE Venta (
+    VentaID INT AUTO_INCREMENT PRIMARY KEY,
+    Fecha_venta DATE NOT NULL,
+    ClienteID INT,
+    Total DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID)
 );
 
-create table Helado(
-HeladoID int primary key auto_increment,
-Sabor_Helado varchar(50),
-Nombre_Helado varchar(50),
-Kilo enum("1/4","1/2","1K","2K")
+CREATE TABLE Pizza (
+    PizzaID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre_Pizza VARCHAR(100) NOT NULL,
+    Precio DECIMAL(10, 2) NOT NULL
 );
 
-create table Pizza(
-PizzaID int primary key auto_increment,
-Nombre_Pizza varchar(50),
-Tamanio_Pizza enum("Pequeño","Mediano","Grande")
+CREATE TABLE Batido (
+    BatidoID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre_Batido VARCHAR(100) NOT NULL,
+    Precio DECIMAL(10, 2) NOT NULL,
+    Sabor_Batido VARCHAR(50) NOT NULL,
+    Tamaño_Batido VARCHAR(50) NOT NULL
 );
 
-create table Batido(
-BatidoID int primary key auto_increment,
-Sabor_Batido varchar(50),
-Tamanio_batido enum("Pequeño","Mediano","Grande"),
-Nombre_Batido varchar(50)
+CREATE TABLE Helado (
+    HeladoID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre_Helado VARCHAR(100) NOT NULL,
+    Precio DECIMAL(10, 2) NOT NULL,
+    Sabor_Helado VARCHAR(50) NOT NULL,
+    Kilo DECIMAL(5, 2) NOT NULL
 );
 
-create table Descuento(
-VentaID int primary key auto_increment,
-Descuento_Pizza varchar(50),
-Descuento_Helado varchar(50),
-Descuento_Batido varchar(50)
+CREATE TABLE Inventario (
+    InventarioID INT AUTO_INCREMENT PRIMARY KEY,
+    PizzaID INT,
+    BatidoID INT,
+    HeladoID INT,
+    Cantidad INT NOT NULL,
+    FOREIGN KEY (PizzaID) REFERENCES Pizza(PizzaID),
+    FOREIGN KEY (BatidoID) REFERENCES Batido(BatidoID),
+    FOREIGN KEY (HeladoID) REFERENCES Helado(HeladoID)
 );
 
-create table Productos_Comprados(
-Productos_CompradosID int primary key auto_increment,
-Nombre_Producto varchar(50),
-HeladoID int,
-PizzaID int,
-BatidoID int,
-foreign key(HeladoID) references Helado(HeladoID),
-foreign key(PizzaID) references Pizza(PizzaID),
-foreign key(BatidoID) references Batido(BatidoID)
+CREATE TABLE Descuento (
+    DescuentoID INT AUTO_INCREMENT PRIMARY KEY,
+    Descuento_Pizza DECIMAL(5, 2),
+    Descuento_Batido DECIMAL(5, 2),
+    Descuento_Helado DECIMAL(5, 2)
 );
 
-create table Venta(
-VentaID int primary key auto_increment,
-ClienteID int,
-Productos_CompradosID int,
-Cantidad int,
-Total decimal,
-Fecha_venta date,
-foreign key (ClienteID) references Cliente(ClienteID),
-foreign key(Productos_CompradosID) references Productos_Comprados(Productos_CompradosID)
+CREATE TABLE Productos_Comprados (
+    Productos_Comprados_ID INT AUTO_INCREMENT PRIMARY KEY,
+    VentaID INT,
+    PizzaID INT,
+    BatidoID INT,
+    HeladoID INT,
+    Cantidad INT NOT NULL,
+    FOREIGN KEY (VentaID) REFERENCES Venta(VentaID),
+    FOREIGN KEY (PizzaID) REFERENCES Pizza(PizzaID),
+    FOREIGN KEY (BatidoID) REFERENCES Batido(BatidoID),
+    FOREIGN KEY (HeladoID) REFERENCES Helado(HeladoID)
 );
 
--- Insert en la tabla Cliente
-INSERT INTO Cliente (Nombre) VALUES ('Juan Perez');
-INSERT INTO Cliente (Nombre) VALUES ('Maria Lopez');
-INSERT INTO Cliente (Nombre) VALUES ('Carlos Gomez');
-INSERT INTO Cliente (Nombre) VALUES ('Ana Martinez');
 
--- Insert en la tabla Inventario
-INSERT INTO Inventario (Productos, Cantidad, Precio_Unidad) VALUES ('Helado de Vainilla', 20, 2.50);
-INSERT INTO Inventario (Productos, Cantidad, Precio_Unidad) VALUES ('Pizza Margherita', 10, 7.50);
-INSERT INTO Inventario (Productos, Cantidad, Precio_Unidad) VALUES ('Batido de Fresa', 15, 3.00);
-INSERT INTO Inventario (Productos, Cantidad, Precio_Unidad) VALUES ('Helado de Chocolate', 25, 2.75);
-
--- Insert en la tabla Helado
-INSERT INTO Helado (Sabor_Helado, Nombre_Helado, Kilo) VALUES ('Vainilla', 'Helado Clásico de Vainilla', '1/2');
-INSERT INTO Helado (Sabor_Helado, Nombre_Helado, Kilo) VALUES ('Chocolate', 'Helado Intenso de Chocolate', '1K');
-INSERT INTO Helado (Sabor_Helado, Nombre_Helado, Kilo) VALUES ('Fresa', 'Helado Suave de Fresa', '1/4');
-INSERT INTO Helado (Sabor_Helado, Nombre_Helado, Kilo) VALUES ('Limón', 'Helado Refrescante de Limón', '2K');
-
--- Insert en la tabla Pizza
-INSERT INTO Pizza (Nombre_Pizza, Tamanio_Pizza) VALUES ('Pizza Margherita', 'Mediano');
-INSERT INTO Pizza (Nombre_Pizza, Tamanio_Pizza) VALUES ('Pizza Pepperoni', 'Grande');
-INSERT INTO Pizza (Nombre_Pizza, Tamanio_Pizza) VALUES ('Pizza Hawaiana', 'Pequeño');
-INSERT INTO Pizza (Nombre_Pizza, Tamanio_Pizza) VALUES ('Pizza Cuatro Quesos', 'Grande');
-
--- Insert en la tabla Batido
-INSERT INTO Batido (Sabor_Batido, Tamanio_batido, Nombre_Batido) VALUES ('Fresa', 'Mediano', 'Batido Refrescante de Fresa');
-INSERT INTO Batido (Sabor_Batido, Tamanio_batido, Nombre_Batido) VALUES ('Chocolate', 'Grande', 'Batido Intenso de Chocolate');
-INSERT INTO Batido (Sabor_Batido, Tamanio_batido, Nombre_Batido) VALUES ('Vainilla', 'Pequeño', 'Batido Clásico de Vainilla');
-INSERT INTO Batido (Sabor_Batido, Tamanio_batido, Nombre_Batido) VALUES ('Plátano', 'Grande', 'Batido Nutritivo de Plátano');
-
--- Insert en la tabla Descuento
-INSERT INTO Descuento (Descuento_Pizza, Descuento_Helado, Descuento_Batido) VALUES ('10%', '15%', '5%');
-INSERT INTO Descuento (Descuento_Pizza, Descuento_Helado, Descuento_Batido) VALUES ('20%', '10%', '0%');
-INSERT INTO Descuento (Descuento_Pizza, Descuento_Helado, Descuento_Batido) VALUES ('5%', '20%', '10%');
-INSERT INTO Descuento (Descuento_Pizza, Descuento_Helado, Descuento_Batido) VALUES ('0%', '0%', '0%');
-
--- Insert en la tabla Productos_Comprados
-INSERT INTO Productos_Comprados (Nombre_Producto, HeladoID, PizzaID, BatidoID) VALUES ('Combo Helado y Pizza', 1, 2, NULL);
-INSERT INTO Productos_Comprados (Nombre_Producto, HeladoID, PizzaID, BatidoID) VALUES ('Helado de Chocolate y Batido de Fresa', 2, NULL, 1);
-INSERT INTO Productos_Comprados (Nombre_Producto, HeladoID, PizzaID, BatidoID) VALUES ('Pizza Margherita y Batido de Chocolate', NULL, 1, 2);
-INSERT INTO Productos_Comprados (Nombre_Producto, HeladoID, PizzaID, BatidoID) VALUES ('Combo Familiar', 3, 3, 4);
-
--- Insert en la tabla Venta
-INSERT INTO Venta (ClienteID, Productos_CompradosID, Cantidad, Total, Fecha_venta) VALUES (1, 1, 2, 15.00, '2024-10-23');
-INSERT INTO Venta (ClienteID, Productos_CompradosID, Cantidad, Total, Fecha_venta) VALUES (2, 2, 1, 5.50, '2024-10-23');
-INSERT INTO Venta (ClienteID, Productos_CompradosID, Cantidad, Total, Fecha_venta) VALUES (3, 3, 3, 20.00, '2024-10-23');
-INSERT INTO Venta (ClienteID, Productos_CompradosID, Cantidad, Total, Fecha_venta) VALUES (4, 4, 4, 50.00, '2024-10-23');
+INSERT INTO Cliente (Nombre) VALUES ('Juan Pérez');
+INSERT INTO Cliente (Nombre) VALUES ('María García');
+INSERT INTO Cliente (Nombre) VALUES ('Carlos Sánchez');
 
 
+INSERT INTO Batido (Nombre_Batido, Precio, Sabor_Batido, Tamaño_Batido) VALUES ('Chocolate', 4.99, 'Chocolate', 'Grande');
+INSERT INTO Batido (Nombre_Batido, Precio, Sabor_Batido, Tamaño_Batido) VALUES ('Fresa', 4.50, 'Fresa', 'Mediano');
+INSERT INTO Batido (Nombre_Batido, Precio, Sabor_Batido, Tamaño_Batido) VALUES ('Vainilla', 5.25, 'Vainilla', 'Grande');
+
+
+INSERT INTO Pizza (Nombre_Pizza, Precio) VALUES ('Margarita', 8.99);
+INSERT INTO Pizza (Nombre_Pizza, Precio) VALUES ('Pepperoni', 10.99);
+INSERT INTO Pizza (Nombre_Pizza, Precio) VALUES ('Cuatro Quesos', 12.99);
+
+
+INSERT INTO Helado (Nombre_Helado, Precio, Sabor_Helado, Kilo) VALUES ('Helado de Chocolate', 15.99, 'Chocolate', 1.0);
+INSERT INTO Helado (Nombre_Helado, Precio, Sabor_Helado, Kilo) VALUES ('Helado de Vainilla', 13.99, 'Vainilla', 0.5);
+INSERT INTO Helado (Nombre_Helado, Precio, Sabor_Helado, Kilo) VALUES ('Helado de Fresa', 14.99, 'Fresa', 0.75);
+
+
+INSERT INTO Inventario (PizzaID, BatidoID, HeladoID, Cantidad) VALUES (1, NULL, NULL, 20);
+INSERT INTO Inventario (PizzaID, BatidoID, HeladoID, Cantidad) VALUES (NULL, 1, NULL, 30);
+INSERT INTO Inventario (PizzaID, BatidoID, HeladoID, Cantidad) VALUES (NULL, NULL, 1, 25);
+
+
+INSERT INTO Descuento (Descuento_Pizza, Descuento_Batido, Descuento_Helado) VALUES (10.00, 5.00, 15.00);
+
+
+INSERT INTO Venta (Fecha_venta, ClienteID, Total) VALUES ('2024-10-28', 1, 20.99);
+INSERT INTO Venta (Fecha_venta, ClienteID, Total) VALUES ('2024-10-28', 2, 15.50);
+INSERT INTO Venta (Fecha_venta, ClienteID, Total) VALUES ('2024-10-28', 3, 18.75);
+
+
+INSERT INTO Productos_Comprados (VentaID, PizzaID, BatidoID, HeladoID, Cantidad) VALUES (1, 1, NULL, NULL, 2);
+INSERT INTO Productos_Comprados (VentaID, PizzaID, BatidoID, HeladoID, Cantidad) VALUES (1, NULL, 1, NULL, 1);
+INSERT INTO Productos_Comprados (VentaID, PizzaID, BatidoID, HeladoID, Cantidad) VALUES (2, NULL, NULL, 1, 3);
+INSERT INTO Productos_Comprados (VentaID, PizzaID, BatidoID, HeladoID, Cantidad) VALUES (3, 2, NULL, NULL, 1);
