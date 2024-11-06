@@ -20,7 +20,8 @@ CREATE TABLE Venta (
 CREATE TABLE Pizza (
     PizzaID INT AUTO_INCREMENT PRIMARY KEY,
     Nombre_Pizza VARCHAR(100) NOT NULL,
-    Precio DECIMAL(10, 2) NOT NULL
+    Precio DECIMAL(10, 2) NOT NULL,
+    Cantidad_Pizza INT NOT NULL
 );
 
 CREATE TABLE Batido (
@@ -29,6 +30,7 @@ CREATE TABLE Batido (
     Precio DECIMAL(10, 2) NOT NULL,
     Sabor_Batido VARCHAR(50) NOT NULL,
     Tamaño_Batido VARCHAR(50) NOT NULL
+    Unidades_Batido INT NOT NULL
 );
 
 CREATE TABLE Helado (
@@ -36,7 +38,8 @@ CREATE TABLE Helado (
     Nombre_Helado VARCHAR(100) NOT NULL,
     Precio DECIMAL(10, 2) NOT NULL,
     Sabor_Helado VARCHAR(50) NOT NULL,
-    Kilo DECIMAL(5, 2) NOT NULL
+    Kilo DECIMAL(5, 2) NOT NULL,
+    Cantidad_Helado INT NOT NULL
 );
 
 CREATE TABLE Inventario (
