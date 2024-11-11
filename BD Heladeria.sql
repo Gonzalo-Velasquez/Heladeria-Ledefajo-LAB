@@ -46,7 +46,7 @@ CREATE TABLE pedido_producto (
 CREATE TABLE empleados (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
-    tipo_empleado enum('Vendedor', 'Administrador', 'Repartidor')
+    rol enum('Vendedor', 'Administrador', 'Repartidor')
 );
 
 -- Tabla de Repartidores (específicos para los empleados que entregan pedidos)
@@ -78,11 +78,11 @@ INSERT INTO productos (nombre, precio, tipo) VALUES ('Helado de Fresa', 90.0, 'H
 INSERT INTO productos (nombre, precio, tipo) VALUES ('Chispas de Chocolate', 20.0, 'Topping');
 INSERT INTO productos (nombre, precio, tipo) VALUES ('Combo Familiar', 300.0, 'Combo');
 
-INSERT INTO empleados (nombre, tipo_empleado) 
+INSERT INTO empleados (nombre, rol) 
 VALUES ('Juan Pérez', 'Vendedor');
-INSERT INTO empleados (nombre, tipo_empleado) 
+INSERT INTO empleados (nombre, rol) 
 VALUES ('María Gómez', 'Administrador');
-INSERT INTO empleados (nombre, tipo_empleado)
+INSERT INTO empleados (nombre, rol)
 VALUES ('Carlos Rodríguez', 'Repartidor');
 
 INSERT INTO repartidores (id_empleado, vehiculo, zona_entrega) 
