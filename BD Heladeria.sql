@@ -4,110 +4,104 @@ create database Heladeria;
 
 use Heladeria;
 
-CREATE TABLE Cliente (
-    ClienteID INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre VARCHAR(100) NOT NULL
+-- Tabla de Productos
+CREATE TABLE productos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    tipo VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE Venta (
-    VentaID INT AUTO_INCREMENT PRIMARY KEY,
-    Fecha_venta DATE NOT NULL,
-    ClienteID INT,
-    Total DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (ClienteID) REFERENCES Cliente(ClienteID)
+-- Tabla de Clientes 
+CREATE TABLE clientes (
+    id_cliente INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_cliente VARCHAR(100) NOT NULL,
+    direccion_cliente VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE Pizza (
-    PizzaID INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre_Pizza VARCHAR(100) NOT NULL,
-    Precio DECIMAL(10, 2) NOT NULL,
-    Cantidad_Pizza INT NOT NULL
-);
-
-CREATE TABLE Batido (
-    BatidoID INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre_Batido VARCHAR(100) NOT NULL,
-    Precio DECIMAL(10, 2) NOT NULL,
-    Sabor_Batido VARCHAR(50) NOT NULL,
-    Tamaño_Batido VARCHAR(50) NOT NULL
-    Unidades_Batido INT NOT NULL
-);
-
-CREATE TABLE Helado (
-    HeladoID INT AUTO_INCREMENT PRIMARY KEY,
-    Nombre_Helado VARCHAR(100) NOT NULL,
-    Precio DECIMAL(10, 2) NOT NULL,
-    Sabor_Helado VARCHAR(50) NOT NULL,
-    Kilo DECIMAL(5, 2) NOT NULL,
-    Cantidad_Helado INT NOT NULL
-);
-
-CREATE TABLE Inventario (
-    InventarioID INT AUTO_INCREMENT PRIMARY KEY,
-    PizzaID INT,
-    BatidoID INT,
-    HeladoID INT,
-    Cantidad INT NOT NULL,
-    FOREIGN KEY (PizzaID) REFERENCES Pizza(PizzaID),
-    FOREIGN KEY (BatidoID) REFERENCES Batido(BatidoID),
-    FOREIGN KEY (HeladoID) REFERENCES Helado(HeladoID)
-);
-
-CREATE TABLE Descuento (
-    DescuentoID INT AUTO_INCREMENT PRIMARY KEY,
-    Descuento_Pizza DECIMAL(5, 2),
-    Descuento_Batido DECIMAL(5, 2),
-    Descuento_Helado DECIMAL(5, 2)
-);
-
-CREATE TABLE Productos_Comprados (
-    Productos_Comprados_ID INT AUTO_INCREMENT PRIMARY KEY,
-    VentaID INT,
-    PizzaID INT,
-    BatidoID INT,
-    HeladoID INT,
-    Cantidad INT NOT NULL,
-    FOREIGN KEY (VentaID) REFERENCES Venta(VentaID),
-    FOREIGN KEY (PizzaID) REFERENCES Pizza(PizzaID),
-    FOREIGN KEY (BatidoID) REFERENCES Batido(BatidoID),
-    FOREIGN KEY (HeladoID) REFERENCES Helado(HeladoID)
+-- Tabla de Pedidos
+CREATE TABLE pedidos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fecha_pedido DATE NOT NULL,
+    estado enum('Pendiente','En Preparacion', 'Entregado') DEFAULT 'Pendiente',
+    tipo_pedido Enum('En Tienda','Delivery') NOT NULL,
+    id_cliente INT, -- Solo para pedidos de tipo 'Delivery'
+    direccion VARCHAR(255), -- Solo si es delivery
+    total DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) 
 );
 
 
-INSERT INTO Cliente (Nombre) VALUES ('Juan Pérez');
-INSERT INTO Cliente (Nombre) VALUES ('María García');
-INSERT INTO Cliente (Nombre) VALUES ('Carlos Sánchez');
+-- Tabla de Relación Pedido-Producto (Productos en cada pedido)
+CREATE TABLE pedido_producto (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_pedido INT,
+    id_producto INT,
+    cantidad INT NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id),
+    FOREIGN KEY (id_producto) REFERENCES productos(id)
+);
+
+-- Tabla de Empleados
+CREATE TABLE empleados (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100) NOT NULL,
+    tipo_empleado enum('Vendedor', 'Administrador', 'Repartidor')
+);
+
+-- Tabla de Repartidores (específicos para los empleados que entregan pedidos)
+CREATE TABLE repartidores (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_empleado INT,
+    vehiculo VARCHAR(50), -- Tipo de vehículo usado para las entregas
+    zona_entrega VARCHAR(100), -- Zona a la que está asignado el repartidor
+    FOREIGN KEY (id_empleado) REFERENCES empleados(id)
+);
+
+-- Tabla de Relación Pedido-Repartidor (para asignar pedidos de delivery a repartidores)
+CREATE TABLE delivery (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_pedido INT,
+    id_repartidor INT,
+    fecha_asignacion DATE,
+    estado_entrega enum('Pendiente', 'Entregado') DEFAULT 'Pendiente',
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id),
+    FOREIGN KEY (id_repartidor) REFERENCES repartidores(id)
+);
+
+INSERT INTO clientes (nombre_cliente, direccion_cliente)
+VALUES ('Carlos López', 'Calle Ejemplo 456');
 
 
-INSERT INTO Batido (Nombre_Batido, Precio, Sabor_Batido, Tamaño_Batido) VALUES ('Chocolate', 4.99, 'Chocolate', 'Grande');
-INSERT INTO Batido (Nombre_Batido, Precio, Sabor_Batido, Tamaño_Batido) VALUES ('Fresa', 4.50, 'Fresa', 'Mediano');
-INSERT INTO Batido (Nombre_Batido, Precio, Sabor_Batido, Tamaño_Batido) VALUES ('Vainilla', 5.25, 'Vainilla', 'Grande');
+INSERT INTO productos (nombre, precio, tipo) VALUES ('Helado de Chocolate', 100.0, 'Helado');
+INSERT INTO productos (nombre, precio, tipo) VALUES ('Helado de Fresa', 90.0, 'Helado');
+INSERT INTO productos (nombre, precio, tipo) VALUES ('Chispas de Chocolate', 20.0, 'Topping');
+INSERT INTO productos (nombre, precio, tipo) VALUES ('Combo Familiar', 300.0, 'Combo');
+
+INSERT INTO empleados (nombre, tipo_empleado) 
+VALUES ('Juan Pérez', 'Vendedor');
+INSERT INTO empleados (nombre, tipo_empleado) 
+VALUES ('María Gómez', 'Administrador');
+INSERT INTO empleados (nombre, tipo_empleado)
+VALUES ('Carlos Rodríguez', 'Repartidor');
+
+INSERT INTO repartidores (id_empleado, vehiculo, zona_entrega) 
+VALUES (3, 'Motocicleta', 'Zona Centro');
+
+-- Pedido delivery
+INSERT INTO pedidos (fecha_pedido, estado, tipo_pedido, id_cliente, direccion, total)
+VALUES ('2024-11-10', 'Pendiente', 'Delivery', 1, 'Calle Ejemplo 456', 350.0);
+
+-- Pedido tienda
+INSERT INTO pedidos (fecha_pedido, estado, tipo_pedido, total)
+VALUES ('2024-11-10', 'Pendiente', 'En tienda', 200.0);
 
 
-INSERT INTO Pizza (Nombre_Pizza, Precio) VALUES ('Margarita', 8.99);
-INSERT INTO Pizza (Nombre_Pizza, Precio) VALUES ('Pepperoni', 10.99);
-INSERT INTO Pizza (Nombre_Pizza, Precio) VALUES ('Cuatro Quesos', 12.99);
+INSERT INTO pedido_producto (id_pedido, id_producto, cantidad) 
+VALUES (1, 1, 2); -- Dos helados de chocolate en el pedido
+INSERT INTO pedido_producto (id_pedido, id_producto, cantidad) 
+VALUES (1, 3, 1); -- Un topping de chispas de chocolate en el pedido
 
+INSERT INTO delivery (id_pedido, id_repartidor, fecha_asignacion, estado_entrega) 
+VALUES (1, 1, '2024-11-10', 'Pendiente');
 
-INSERT INTO Helado (Nombre_Helado, Precio, Sabor_Helado, Kilo) VALUES ('Helado de Chocolate', 15.99, 'Chocolate', 1.0);
-INSERT INTO Helado (Nombre_Helado, Precio, Sabor_Helado, Kilo) VALUES ('Helado de Vainilla', 13.99, 'Vainilla', 0.5);
-INSERT INTO Helado (Nombre_Helado, Precio, Sabor_Helado, Kilo) VALUES ('Helado de Fresa', 14.99, 'Fresa', 0.75);
-
-
-INSERT INTO Inventario (PizzaID, BatidoID, HeladoID, Cantidad) VALUES (1, NULL, NULL, 20);
-INSERT INTO Inventario (PizzaID, BatidoID, HeladoID, Cantidad) VALUES (NULL, 1, NULL, 30);
-INSERT INTO Inventario (PizzaID, BatidoID, HeladoID, Cantidad) VALUES (NULL, NULL, 1, 25);
-
-
-INSERT INTO Descuento (Descuento_Pizza, Descuento_Batido, Descuento_Helado) VALUES (10.00, 5.00, 15.00);
-
-
-INSERT INTO Venta (Fecha_venta, ClienteID, Total) VALUES ('2024-10-28', 1, 20.99);
-INSERT INTO Venta (Fecha_venta, ClienteID, Total) VALUES ('2024-10-28', 2, 15.50);
-INSERT INTO Venta (Fecha_venta, ClienteID, Total) VALUES ('2024-10-28', 3, 18.75);
-
-
-INSERT INTO Productos_Comprados (VentaID, PizzaID, BatidoID, HeladoID, Cantidad) VALUES (1, 1, NULL, NULL, 2);
-INSERT INTO Productos_Comprados (VentaID, PizzaID, BatidoID, HeladoID, Cantidad) VALUES (1, NULL, 1, NULL, 1);
-INSERT INTO Productos_Comprados (VentaID, PizzaID, BatidoID, HeladoID, Cantidad) VALUES (2, NULL, NULL, 1, 3);
-INSERT INTO Productos_Comprados (VentaID, PizzaID, BatidoID, HeladoID, Cantidad) VALUES (3, 2, NULL, NULL, 1);
