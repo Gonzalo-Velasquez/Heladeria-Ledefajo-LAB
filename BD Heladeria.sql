@@ -27,7 +27,7 @@ CREATE TABLE pedidos (
     tipo_pedido Enum('En Tienda','Delivery') NOT NULL,
     id_cliente INT, -- Solo para pedidos de tipo 'Delivery'
     direccion VARCHAR(255), -- Solo si es delivery
-    total DECIMAL(10, 2) NOT NULL,
+    total DECIMAL(10, 2),
     FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente) 
 );
 
