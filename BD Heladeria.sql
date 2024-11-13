@@ -80,13 +80,11 @@ INSERT INTO productos (nombre, precio, tipo) VALUES ('Combo Familiar', 300.0, 'C
 
 INSERT INTO empleados (nombre, rol) 
 VALUES ('Juan Pérez', 'Vendedor');
-INSERT INTO empleados (nombre, rol) 
-VALUES ('María Gómez', 'Administrador');
 INSERT INTO empleados (nombre, rol)
 VALUES ('Carlos Rodríguez', 'Repartidor');
 
 INSERT INTO repartidores (id_empleado, vehiculo, zona_entrega) 
-VALUES (3, 'Motocicleta', 'Zona Centro');
+VALUES (2, 'Motocicleta', 'Zona Centro');
 
 -- Pedido delivery
 INSERT INTO pedidos (fecha_pedido, estado, tipo_pedido, id_cliente, direccion, total)
@@ -104,4 +102,3 @@ VALUES (1, 3, 1); -- Un topping de chispas de chocolate en el pedido
 
 INSERT INTO delivery (id_pedido, id_repartidor, fecha_asignacion, estado_entrega) 
 VALUES (1, 1, '2024-11-10', 'Pendiente');
-
