@@ -94,7 +94,7 @@ VALUES ('2024-11-10', 'Pendiente', 'Delivery', 1, 'Calle Ejemplo 456', 350.0);
 
 -- Pedido tienda
 INSERT INTO pedidos (fecha_pedido, estado, tipo_pedido, total)
-VALUES ('2024-11-10', 'Pendiente', 'En tienda', 200.0);
+VALUES ('2024-11-10', 'Entregado', 'En tienda', 200.0);
 
 
 INSERT INTO pedido_producto (id_pedido, id_producto, cantidad) 
