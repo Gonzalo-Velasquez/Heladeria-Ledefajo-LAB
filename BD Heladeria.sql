@@ -46,7 +46,7 @@ CREATE TABLE pedido_producto (
 CREATE TABLE empleados (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
-    rol enum('Vendedor', 'Repartidor')
+    rol enum('Vendedor', 'Repartidor','Administrador')
 );
 
 -- Tabla de Repartidores (específicos para los empleados que entregan pedidos)
