@@ -1,10 +1,11 @@
 package heladeria;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         
         Scanner sc = new Scanner(System.in);
         int op;
@@ -20,12 +21,19 @@ public class Main {
                 case 1:
                     System.out.println("----------------------------------");                        
                     System.out.println("Menu Vendedor(Elegir N°): ");
+                    Repartidor r = new Repartidor();
+                    r.AsignarPedidoARepartidor();
+                    r.MostrarDatos();
                     System.out.println("---------------------------------- \n");
                     
                     break;
                 case 2:
                     System.out.println("----------------------------------");                        
                     System.out.println("Menu Repartidor(Elegir N°): ");
+                    Cliente c = new Cliente();
+                    c.IngresarDatos();
+                    Vendedor v = new Vendedor();
+                    v.MostrarDatos();
                     System.out.println("---------------------------------- \n");                        
                     break;
 
