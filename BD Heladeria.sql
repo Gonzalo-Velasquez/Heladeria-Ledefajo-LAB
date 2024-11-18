@@ -23,7 +23,7 @@ CREATE TABLE clientes (
 CREATE TABLE pedidos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fecha_pedido DATE NOT NULL,
-    estado enum('Pendiente','En Proceso', 'Entregado') DEFAULT 'Pendiente',
+    estado enum('Pendiente','En Proceso', 'Entregado','Listo') DEFAULT 'Pendiente',
     tipo_pedido Enum('En Tienda','Delivery') NOT NULL,
     id_cliente INT, -- Solo para pedidos de tipo 'Delivery'
     direccion VARCHAR(255), -- Solo si es delivery
