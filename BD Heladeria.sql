@@ -54,7 +54,6 @@ CREATE TABLE repartidores (
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_empleado INT,
     vehiculo VARCHAR(50), -- Tipo de vehículo usado para las entregas
-    zona_entrega VARCHAR(100), -- Zona a la que está asignado el repartidor
     FOREIGN KEY (id_empleado) REFERENCES empleados(id)
 );
 
@@ -83,8 +82,8 @@ VALUES ('Juan Pérez', 'Vendedor');
 INSERT INTO empleados (nombre, rol)
 VALUES ('Carlos Rodríguez', 'Repartidor');
 
-INSERT INTO repartidores (id_empleado, vehiculo, zona_entrega) 
-VALUES (2, 'Motocicleta', 'Zona Centro');
+INSERT INTO repartidores (id_empleado, vehiculo) 
+VALUES (2, 'Motocicleta');
 
 -- Pedido delivery
 INSERT INTO pedidos (fecha_pedido, estado, tipo_pedido, id_cliente, direccion, total)
