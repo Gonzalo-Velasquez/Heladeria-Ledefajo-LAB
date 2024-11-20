@@ -30,6 +30,8 @@ Vendedor: Representa a los empleados responsables de atender a los clientes en e
 
 Repartidor: Representa a los empleados que entregan los pedidos a domicilio. Esta clase permite almacenar información específica para la entrega de pedidos y rastrear la efectividad de las entregas.
 
+Administrador: Se encarga de añadir y mostrar los empleados.
+
 Clase Independiente
 
 Cliente: Representa a los clientes de la heladería. Aunque no es una subclase de ninguna de las anteriores, permite gestionar la información del cliente, como nombre, teléfono y dirección, así como su historial de pedidos.
